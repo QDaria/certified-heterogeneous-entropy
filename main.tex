@@ -1,4 +1,4 @@
-% main-draft.tex — Paper 3: Certified Heterogeneous Entropy with Algebraic Randomness Extraction
+% main-draft.tex: Certified Heterogeneous Entropy with Algebraic Randomness Extraction
 % Venue-neutral draft. Port to ieee-sp/ or usenix-sec/ for submission.
 % Author: Daniel Mo Houshmand, QDaria Quantum Research
 %
@@ -79,7 +79,7 @@ number generators---is essential for post-quantum cryptographic
 systems but lacks formal provenance guarantees.
 %
 We present the Certified Heterogeneous Entropy (\che) framework,
-which makes three contributions.
+which makes four contributions.
 %
 First, we introduce Algebraic Randomness Extraction (\are), a new
 family of seeded extractors parameterized by algebraic programs over
@@ -104,7 +104,11 @@ Our implementation processes 6.8\,MB of IBM Quantum entropy (156
 qubits), WiFi CSI entropy from ESP32-S3 hardware, and OS entropy
 through the \are extractor and compositor pipeline.
 %
-NIST SP~800-90B testing validates output quality.
+Statistical tests consistent with NIST SP~800-90B methodology
+(chi-squared, runs, serial, autocorrelation) pass on composed
+output; the official \texttt{ea\_non\_iid} tool was not executed
+in this work and is deferred to a follow-up reproducibility
+artifact.
 %
 The provenance certificates provide a complete audit trail satisfying
 DORA Art.~7 requirements for cryptographic key lifecycle management
@@ -157,7 +161,8 @@ entropy, nor faithfully adjusted degradation bounds when sources fail.
 
 % Paragraph 2: Why this matters (DORA, regulatory)
 The European Union's Digital Operational Resilience Act
-(DORA)~\cite{dora2022}, effective since 1 July 2025, requires
+(DORA)~\cite{dora2022}, effective 17 January 2025 in the EU and
+from 1 July 2025 in Norway following EEA incorporation, requires
 financial entities to document cryptographic policies, manage key
 lifecycles (Art.~7), and respond to cryptographic developments
 including quantum threats (Art.~6.4).
@@ -1148,9 +1153,6 @@ than silently producing weak entropy.
   \end{tabular}
 \end{table}
 
-\subsection{Certified Entropy Pipeline}
-\label{sec:eval:certified}
-
 \subsection{Collision Analysis}
 \label{sec:eval:collision}
 
@@ -1207,6 +1209,11 @@ executes in under 1.2\,ms for 256-bit entropy requests:
   \end{tabular}
 \end{table}
 
+The 256-bit row includes first-call overhead (SHAKE-256 seed
+expansion, GF table warm-up, certificate structure allocation);
+subsequent 512/1024-bit calls reuse the warmed state, so the
+amortised per-call latency drops and the apparent inversion
+disappears under steady-state benchmarking.
 
 % ═══════════════════════════════════════════════════════════════════
 % SECTION 9: SECURITY ANALYSIS (1 pp)
